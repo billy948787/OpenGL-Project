@@ -203,7 +203,7 @@ void SetupScene(const std::string& modelPath) {
   float zFar = 100.0f;
   glm::mat4x4 P = glm::perspective(glm::radians(fov), aspectRatio, zNear, zFar);
 
-  // Apply CPU transformation
+  // Apply CPU transformation.
   glm::mat4x4 MVP = P * V * M;
 
   mesh->ApplyTransformCPU(MVP);
