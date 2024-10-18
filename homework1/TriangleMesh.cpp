@@ -1,11 +1,9 @@
 #include "TriangleMesh.h"
 
-// split the string
 std::vector<std::string> splitString(std::string s, char delimiter) {
   std::vector<std::string> parts;
   std::string temp;
   for (int i = 0; i < s.size(); i++) {
-    
     if (s[i] == delimiter || s[i] == '\n' || s[i] == '\r') {
       if (!temp.empty()) parts.push_back(temp);
       temp.clear();
@@ -73,11 +71,12 @@ void polygonSubdivision(
   }
 }
 
-// process the line
-void TriangleMesh::processLine(std::vector<glm::vec3>& points,
-                               std::vector<glm::vec2>& texs,
-                               std ::vector<glm::vec3>& normals,
-                               std::vector<std::string> parts) {
+void processLine(std::vector<glm::vec3>& points, std::vector<glm::vec2>& texs,
+                 std ::vector<glm::vec3>& normals,
+                 std::vector<std::string> parts,
+                 std::unordered_map<VertexPTN, unsigned int>& uniqueVertices,
+                 std::vector<VertexPTN>& vertices,
+                 std::vector<unsigned int>& vertexIndices) {
   for (int i = 0; i < parts.size(); i++) {
     std::string part = parts[i];
     if (part == "#") return;
@@ -124,6 +123,19 @@ void TriangleMesh::processLine(std::vector<glm::vec3>& points,
   }
 }
 
+std::vector<std::string> getFilesInDirectory(const std::string& directoryPath) {
+  std::vector<std::string> files;
+  for (const auto& entry : std::filesystem::directory_iterator(directoryPath)) {
+    std::string filePath = entry.path().string();
+
+    if (filePath.find(".obj") != std::string::npos) {
+      files.push_back(filePath);
+    }
+  }
+
+  return files;
+}
+
 // Desc: Constructor of a triangle mesh.
 TriangleMesh::TriangleMesh() {
   numVertices = 0;
@@ -165,7 +177,8 @@ bool TriangleMesh::LoadFromFile(const std::string& filePath,
     // Split the line into parts.
     std::vector<std::string> parts = splitString(line, ' ');
     // Process the data.
-    processLine(points, texs, normals, parts);
+    processLine(points, texs, normals, parts, uniqueVertices, vertices,
+                vertexIndices);
   }
 
   file.close();

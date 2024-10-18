@@ -22,6 +22,7 @@
 #endif
 
 // C++ STL headers.
+#include <filesystem>
 #include <fstream>
 #include <iomanip>
 #include <iostream>
@@ -84,10 +85,6 @@ class TriangleMesh {
   // Load the model from an *.OBJ file.
   bool LoadFromFile(const std::string& filePath, const bool normalized = true);
 
-  void processLine(std::vector<glm::vec3>& points, std::vector<glm::vec2>& texs,
-                   std::vector<glm::vec3>& normals,
-                   std::vector<std::string> parts);
-
   // Create vertex and index buffers.
   void CreateBuffers();
 
@@ -116,5 +113,25 @@ class TriangleMesh {
   int numTriangles;
   glm::vec3 objCenter;
 };
+
+// helper functions prototypes
+std::vector<std::string> getFilesInDirectory(const std::string& directoryPath);
+std::vector<std::string> splitString(std::string s, char delimiter);
+void findAndAddVertexIndices(
+    std::unordered_map<VertexPTN, unsigned int>& uniqueVertices,
+    std::vector<VertexPTN>& vertices, std::vector<unsigned int>& vertexIndices,
+    const VertexPTN vertex);
+void polygonSubdivision(
+    const std::vector<glm::vec3>& points, const std::vector<glm::vec2>& texs,
+    const std::vector<glm::vec3>& normals,
+    const std::vector<std::string>& parts,
+    std::unordered_map<VertexPTN, unsigned int>& uniqueVertices,
+    std::vector<VertexPTN>& vertices, std::vector<unsigned int>& vertexIndices);
+void processLine(std::vector<glm::vec3>& points, std::vector<glm::vec2>& texs,
+                 std::vector<glm::vec3>& normals,
+                 std::vector<std::string> parts,
+                 std::unordered_map<VertexPTN, unsigned int>& uniqueVertices,
+                 std::vector<VertexPTN>& vertices,
+                 std::vector<unsigned int>& vertexIndices);
 
 #endif

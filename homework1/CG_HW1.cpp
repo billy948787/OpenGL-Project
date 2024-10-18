@@ -31,7 +31,6 @@
 const int screenWidth = 600;
 const int screenHeight = 600;
 TriangleMesh* mesh = nullptr;
-std::string userInput = "";
 std::string filePath = "Triangles.obj";
 int menu;
 
@@ -59,20 +58,6 @@ void RenderSceneCB() {
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(VertexPTN), 0);
   glDrawElements(GL_TRIANGLES, mesh->vertexIndices.size(), GL_UNSIGNED_INT, 0);
   glDisableVertexAttribArray(0);
-
-  // Render the user input string
-  glColor3f(1.0f, 1.0f, 1.0f);  // Set text color to white
-  glRasterPos2f(-0.9f, 0.9f);   // Set text position
-  for (char c : userInput) {
-    glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, c);
-  }
-
-  // Render the file path
-  glColor3f(1.0f, 1.0f, 1.0f);  // Set text color to white
-  glRasterPos2f(-0.9f, 0.8f);   // Set text position
-  for (char c : "File: " + filePath) {
-    glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, c);
-  }
 
   glutSwapBuffers();
 }
@@ -107,27 +92,24 @@ void ProcessSpecialKeysCB(int key, int x, int y) {
 
 // Callback function for PopupMenu
 void ProcessMenuEvents(int option) {
-  switch (option) {
-    case 0:
-      // Reload the model
-      ReleaseResources();
-      SetupScene("TestModels_HW1/" + filePath);
-      break;
-    case 1:
-      // Release memory allocation if needed.
-      ReleaseResources();
-      exit(0);
-      break;
-    default:
-      break;
+  ReleaseResources();
+  if (option == 0) {
+    exit(0);
+  } else {
+    filePath = getFilesInDirectory("TestModels_HW1")[option - 1];
+    SetupScene(filePath);
   }
 }
 
 // Create GLUT menus.
 void CreateGLUTMenus() {
   menu = glutCreateMenu(ProcessMenuEvents);
-  glutAddMenuEntry("Reload", 0);
-  glutAddMenuEntry("Quit", 1);
+  std::vector<std::string> menuEntries = getFilesInDirectory("TestModels_HW1");
+  for (int i = 0; i < menuEntries.size(); i++) {
+    glutAddMenuEntry(splitString(menuEntries[i], '/').back().c_str(), i + 1);
+  }
+
+  glutAddMenuEntry("Quit", 0);
   glutAttachMenu(GLUT_RIGHT_BUTTON);
 }
 
@@ -139,20 +121,6 @@ void ProcessKeysCB(unsigned char key, int x, int y) {
     ReleaseResources();
     exit(0);
   }
-  if (key == 13) {
-    // Enter key.
-    filePath = userInput;
-    userInput.clear();
-  } else if (key == 8) {
-    // Backspace key.
-    if (!userInput.empty()) {
-      userInput.pop_back();
-    }
-  } else {
-    userInput.push_back(key);
-  }
-
-  glutPostRedisplay();
 }
 
 void ReleaseResources() {
@@ -160,6 +128,7 @@ void ReleaseResources() {
   // Add your code here.
   // ...
   delete mesh;
+  mesh = nullptr;
 }
 
 void SetupRenderState() {
@@ -210,6 +179,8 @@ void SetupScene(const std::string& modelPath) {
 
   // Create and upload vertex/index buffers.
   mesh->CreateBuffers();
+
+  glutPostRedisplay();
 }
 
 int main(int argc, char** argv) {
@@ -235,7 +206,7 @@ int main(int argc, char** argv) {
 
   // Register callback functions.
   glutDisplayFunc(RenderSceneCB);
-  glutIdleFunc(RenderSceneCB);
+  // glutIdleFunc(RenderSceneCB);
   glutReshapeFunc(ReshapeCB);
   glutSpecialFunc(ProcessSpecialKeysCB);
   glutKeyboardFunc(ProcessKeysCB);
