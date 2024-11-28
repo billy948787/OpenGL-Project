@@ -1,13 +1,4 @@
-﻿#ifdef _WIN32  // Windows OS
-// OpenGL and FreeGlut headers.
-#include <freeglut.h>
-#include <glew.h>
-// GLM.
-#include <glm.hpp>
-#include <gtc/type_ptr.hpp>
-#endif
-
-#ifdef __APPLE__  // MacOS
+﻿#ifdef __APPLE__  // MacOS
 // OpenGL and FreeGlut headers.
 #include <GL/glew.h>
 // include freeglut.h after glew.h
@@ -16,6 +7,12 @@
 // GLM.
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#else
+#include <freeglut.h>
+#include <glew.h>
+// GLM.
+#include <glm.hpp>
+#include <gtc/type_ptr.hpp>
 #endif
 
 // C++ STL headers.
@@ -30,13 +27,14 @@
 // Global variables.
 const int screenWidth = 600;
 const int screenHeight = 600;
-TriangleMesh* mesh = nullptr;
-std::string filePath = "Triangles.obj";
+TriangleMesh *mesh = nullptr;
+std::string filePath = "../TestModels_HW1/Triangles.obj";
 int menu;
+const std::string directoryPath = "../TestModels_HW1";
 
 // Function prototypes.
 void SetupRenderState();
-void SetupScene(const std::string&);
+void SetupScene(const std::string &);
 void ReleaseResources();
 void RenderSceneCB();
 void ReshapeCB(int, int);
@@ -151,7 +149,7 @@ void mouse(int button, int state, int x, int y) {
 
 // Load a model from obj file and apply transformation.
 // You can alter the parameters for dynamically loading a model.
-void SetupScene(const std::string& modelPath) {
+void SetupScene(const std::string &modelPath) {
   mesh = new TriangleMesh();
   mesh->LoadFromFile(modelPath);
 
@@ -183,7 +181,7 @@ void SetupScene(const std::string& modelPath) {
   glutPostRedisplay();
 }
 
-int main(int argc, char** argv) {
+int main(int argc, char **argv) {
   // Setting window properties.
   glutInit(&argc, argv);
   glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);

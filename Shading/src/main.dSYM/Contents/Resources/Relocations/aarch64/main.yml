@@ -1,0 +1,5 @@
+---
+triple:          'arm64-apple-darwin'
+binary-path:     '/Users/lijiye/coding/opengl/Shading/src/main'
+relocations:     []
+...

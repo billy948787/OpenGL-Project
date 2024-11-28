@@ -1,0 +1,45 @@
+{
+  "tasks": [
+    {
+      "type": "cppbuild",
+      "label": "C/C++: g++ 建置使用中檔案",
+      "command": "/usr/bin/g++",
+
+      "args": [
+        "-std=c++17",
+        "-fdiagnostics-color=always",
+        "-g",
+        "-I/opt/homebrew/opt/glfw/include",
+        "-I/opt/homebrew/opt/glew/include",
+        "-I/opt/homebrew/opt/glm/include",
+        "-I${workspaceFolder}/Library/imgui",
+        "-I${workspaceFolder}/Library/imgui/backends",
+        "-L/opt/homebrew/opt/freeglut/lib",
+        "-L/opt/homebrew/opt/glfw/lib",
+        "-L/opt/homebrew/opt/glew/lib",
+        "-L/opt/homebrew/opt/glm/lib",
+        "-framework",
+        "OpenGL",
+        "-framework",
+        "Cocoa",
+        "-framework",
+        "IOKit",
+        "-lglfw",
+        "-lGLEW",
+        "${fileDirname}/*.cpp",
+        "${workspaceFolder}/Library/imgui/*.cpp",
+        "${workspaceFolder}/Library/imgui/backends/imgui_impl_glfw.cpp",
+        "${workspaceFolder}/Library/imgui/backends/imgui_impl_opengl3.cpp",
+        "-o",
+        "${fileDirname}/main"
+      ],
+      "options": {
+        "cwd": "${fileDirname}"
+      },
+      "problemMatcher": ["$gcc"],
+      "group": "build",
+      "detail": "偵錯工具產生的工作。"
+    }
+  ],
+  "version": "2.0.0"
+}

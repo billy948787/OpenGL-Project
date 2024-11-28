@@ -24,7 +24,7 @@
         "-lglut",
         "${fileDirname}/*.cpp",
         "-o",
-        "${fileDirname}/main"
+        "${fileDirname}/excutable/main"
       ],
       "options": {
         "cwd": "${fileDirname}"
