@@ -85,7 +85,7 @@ struct SceneDirLight {
     worldMatrix = glm::mat4x4(1.0f);
     visColor = glm::vec3(1.0f, 1.0f, 1.0f);
     // 設定方向光的顯示位置(較遠處)
-    position = glm::vec3(0.0f, 0.0f, -5.0f);
+    position = glm::vec3(0.0f, 0.0f, -1.0f);
   }
   DirectionalLight* light;
   glm::mat4x4 worldMatrix;
@@ -290,23 +290,34 @@ void RenderSceneCB() {
 
   DirectionalLight* dirLight = dirLightObj.light;
   if (dirLight != nullptr) {
-    // 計算世界矩陣
+    glDisable(GL_DEPTH_TEST);
+    // 使用固定位置
     glm::mat4x4 T = glm::translate(glm::mat4x4(1.0f), dirLightObj.position);
-    dirLightObj.worldMatrix = T;
 
-    // 計算 MVP 矩陣
+    glm::vec3 dir = -dirLight->GetDirection();
+    glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
+    glm::vec3 right = glm::normalize(glm::cross(dir, up));
+    up = glm::normalize(glm::cross(right, dir));
+
+    // 構建旋轉矩陣，使箭頭對齊光的方向
+    glm::mat4x4 R =
+        glm::mat4x4(right.x, right.y, right.z, 0.0f, up.x, up.y, up.z, 0.0f,
+                    dir.x, dir.y, dir.z, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f);
+
+    dirLightObj.worldMatrix = T * R;
+
+    // 渲染箭頭
     glm::mat4x4 MVP = camera->GetProjMatrix() * camera->GetViewMatrix() *
                       dirLightObj.worldMatrix;
-
-    // 渲染方向光點
     fillColorShader->Bind();
     glUniformMatrix4fv(fillColorShader->GetLocMVP(), 1, GL_FALSE,
                        glm::value_ptr(MVP));
     glUniform3fv(fillColorShader->GetLocFillColor(), 1,
                  glm::value_ptr(dirLightObj.visColor));
-
     dirLight->Draw();
     fillColorShader->UnBind();
+
+    glEnable(GL_DEPTH_TEST);  // 恢復深度測試
   }
 }
 

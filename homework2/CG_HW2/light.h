@@ -153,14 +153,21 @@ class DirectionalLight {
   DirectionalLight(const glm::vec3 dir, const glm::vec3 L) {
     direction = glm::normalize(dir);
     radiance = L;
+
+    CreateVisGeometry();
   }
 
   void Draw() {
-    glPointSize(16.0f);
+    glLineWidth(3.0f);  // 加粗線條
     glEnableVertexAttribArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, vboId);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(VertexP), 0);
-    glDrawArrays(GL_POINTS, 0, 1);
+
+    // 畫出箭頭的桿部
+    glDrawArrays(GL_LINES, 0, 2);
+    // 畫出箭頭的頭部
+    glDrawArrays(GL_LINES, 1, 2);
+
     glDisableVertexAttribArray(0);
   }
 
@@ -170,28 +177,49 @@ class DirectionalLight {
   void ResetDirection(const glm::vec3 dir) { direction = glm::normalize(dir); }
 
   void MoveLeft(const float moveSpeed) {
-    direction += moveSpeed * glm::vec3(0.1f, 0.0f, 0.0f);
+    glm::mat4 rot =
+        glm::rotate(glm::mat4(1.0f), moveSpeed, glm::vec3(0.0f, 1.0f, 0.0f));
+    direction = glm::vec3(rot * glm::vec4(direction, 0.0f));
   }
+
   void MoveRight(const float moveSpeed) {
-    direction += moveSpeed * glm::vec3(-0.1f, 0.0f, 0.0f);
+    glm::mat4 rot =
+        glm::rotate(glm::mat4(1.0f), -moveSpeed, glm::vec3(0.0f, 1.0f, 0.0f));
+    direction = glm::vec3(rot * glm::vec4(direction, 0.0f));
   }
+
   void MoveUp(const float moveSpeed) {
-    direction += moveSpeed * glm::vec3(0.0f, -0.1f, 0.0f);
+    glm::vec3 right =
+        glm::normalize(glm::cross(direction, glm::vec3(0.0f, 1.0f, 0.0f)));
+    glm::mat4 rot = glm::rotate(glm::mat4(1.0f), -moveSpeed, right);
+    direction = glm::vec3(rot * glm::vec4(direction, 0.0f));
   }
-  void MoveUpLeft(const float moveSpeed) {
-    direction += moveSpeed * glm::vec3(0.1f, -0.1f, 0.0f);
-  }
-  void MoveUpRight(const float moveSpeed) {
-    direction += moveSpeed * glm::vec3(-0.1f, -0.1f, 0.0f);
-  }
-  void MoveDownLeft(const float moveSpeed) {
-    direction += moveSpeed * glm::vec3(0.1f, 0.1f, 0.0f);
-  }
-  void MoveDownRight(const float moveSpeed) {
-    direction += moveSpeed * glm::vec3(-0.1f, 0.1f, 0.0f);
-  }
+
   void MoveDown(const float moveSpeed) {
-    direction += moveSpeed * glm::vec3(0.0f, 0.1f, 0.0f);
+    glm::vec3 right =
+        glm::normalize(glm::cross(direction, glm::vec3(0.0f, 1.0f, 0.0f)));
+    glm::mat4 rot = glm::rotate(glm::mat4(1.0f), moveSpeed, right);
+    direction = glm::vec3(rot * glm::vec4(direction, 0.0f));
+  }
+
+  void MoveUpLeft(const float moveSpeed) {
+    MoveUp(moveSpeed * 0.707f);
+    MoveLeft(moveSpeed * 0.707f);
+  }
+
+  void MoveUpRight(const float moveSpeed) {
+    MoveUp(moveSpeed * 0.707f);
+    MoveRight(moveSpeed * 0.707f);
+  }
+
+  void MoveDownLeft(const float moveSpeed) {
+    MoveDown(moveSpeed * 0.707f);
+    MoveLeft(moveSpeed * 0.707f);
+  }
+
+  void MoveDownRight(const float moveSpeed) {
+    MoveDown(moveSpeed * 0.707f);
+    MoveRight(moveSpeed * 0.707f);
   }
 
  private:
@@ -202,11 +230,20 @@ class DirectionalLight {
   GLuint vboId;
 
   void CreateVisGeometry() {
-    VertexP lightVtx = glm::vec3(0, 0, 0);
-    const int numVertex = 1;
+    // 建立一個箭頭 (3個頂點形成一個箭頭形狀)
+    VertexP vertices[3];
+
+    // 箭頭的桿部起點
+    vertices[0].position = glm::vec3(0.0f, 0.0f, 0.0f);
+    // 箭頭的桿部終點
+    vertices[1].position = glm::vec3(0.0f, 0.0f, 0.3f);
+    // 箭頭的頭部頂點
+    vertices[2].position = glm::vec3(0.0f, 0.05f, 0.25f);
+
+    const int numVertex = 3;
     glGenBuffers(1, &vboId);
     glBindBuffer(GL_ARRAY_BUFFER, vboId);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(VertexP) * numVertex, &lightVtx,
+    glBufferData(GL_ARRAY_BUFFER, sizeof(VertexP) * numVertex, vertices,
                  GL_STATIC_DRAW);
   }
 };
