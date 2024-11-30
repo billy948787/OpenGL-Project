@@ -157,8 +157,8 @@ class DirectionalLight {
     CreateVisGeometry();
   }
 
-  void Draw() {
-    glLineWidth(300.0f);  // 加粗線條
+  void Draw(float lineWidth) {
+    glLineWidth(lineWidth);  // 加粗線條
     glEnableVertexAttribArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, vboId);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(VertexP), 0);
@@ -169,6 +169,7 @@ class DirectionalLight {
     glDrawArrays(GL_LINES, 1, 2);
 
     glDisableVertexAttribArray(0);
+    glLineWidth(1.0f);
   }
 
   glm::vec3 GetDirection() const { return direction; }

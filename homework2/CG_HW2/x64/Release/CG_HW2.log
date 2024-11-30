@@ -1,0 +1,22 @@
+﻿  trianglemesh.cpp
+C:\coding\OpenGL-Project\homework2\CG_HW2\trianglemesh.cpp(1,1): warning C4819: 檔案含有無法在目前字碼頁 (950) 中表示的字元。請以 Unicode 格式儲存檔案以防止資料遺失
+C:\coding\OpenGL-Project\homework2\CG_HW2\trianglemesh.h(1,1): warning C4819: 檔案含有無法在目前字碼頁 (950) 中表示的字元。請以 Unicode 格式儲存檔案以防止資料遺失
+  (編譯來源檔案 'trianglemesh.cpp')
+  
+C:\coding\OpenGL-Project\homework2\Library\GL\include\GLFW\glfw3.h(3235,1): warning C4819: 檔案含有無法在目前字碼頁 (950) 中表示的字元。請以 Unicode 格式儲存檔案以防止資料遺失
+  (編譯來源檔案 'trianglemesh.cpp')
+  
+C:\coding\OpenGL-Project\homework2\CG_HW2\trianglemesh.cpp(42,43): warning C4267: '=': 將 'size_t' 轉換為 'unsigned int'，資料可能遺失
+C:\coding\OpenGL-Project\homework2\CG_HW2\trianglemesh.cpp(44,53): warning C4267: '引數': 將 'size_t' 轉換為 '_Ty'，資料可能遺失
+C:\coding\OpenGL-Project\homework2\CG_HW2\trianglemesh.cpp(44,53): warning C4267:         with
+C:\coding\OpenGL-Project\homework2\CG_HW2\trianglemesh.cpp(44,53): warning C4267:         [
+C:\coding\OpenGL-Project\homework2\CG_HW2\trianglemesh.cpp(44,53): warning C4267:             _Ty=unsigned int
+C:\coding\OpenGL-Project\homework2\CG_HW2\trianglemesh.cpp(44,53): warning C4267:         ]
+C:\coding\OpenGL-Project\homework2\CG_HW2\trianglemesh.cpp(305,30): warning C4267: '=': 將 'size_t' 轉換為 'int'，資料可能遺失
+LINK : warning LNK4098: 預設的程式庫 'LIBCMT' 與其他使用的程式庫衝突，請使用 /NODEFAULTLIB:library
+  正在產生程式碼
+  2 of 3252 functions (<0.1%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    39 functions had inline decision re-evaluated but remain unchanged
+  已完成程式碼產生
+  CG_HW2.vcxproj -> C:\coding\OpenGL-Project\homework2\x64\Release\CG_HW2.exe

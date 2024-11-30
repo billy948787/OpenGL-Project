@@ -46,6 +46,7 @@ PhongShadingDemoShaderProg* phongShadingShader = nullptr;
 bool isBlingPhong = true;
 // Light control.
 bool showDirLightArrow = true;
+float dirLightArrowScale = 1.0f;
 bool onPointLight = true;
 bool onSpotLight = true;
 bool onDirLight = true;
@@ -315,7 +316,7 @@ void RenderSceneCB() {
                        glm::value_ptr(MVP));
     glUniform3fv(fillColorShader->GetLocFillColor(), 1,
                  glm::value_ptr(dirLightObj.visColor));
-    dirLight->Draw();
+    dirLight->Draw(dirLightArrowScale);
     fillColorShader->UnBind();
 
     glEnable(GL_DEPTH_TEST);  // 恢復深度測試
@@ -475,6 +476,20 @@ void CreateShaderLib() {
     exit(1);
 }
 
+void printLineWidthSupport() {
+    GLfloat lineWidthRange[2];
+    GLfloat lineWidthGranularity;
+
+    // 查詢線條寬度範圍
+    glGetFloatv(GL_LINE_WIDTH_RANGE, lineWidthRange);
+
+    // 查詢線條寬度粒度
+    glGetFloatv(GL_LINE_WIDTH_GRANULARITY, &lineWidthGranularity);
+
+    printf("Supported line width range: %.1f - %.1f\n", lineWidthRange[0], lineWidthRange[1]);
+    printf("Line width granularity: %.1f\n", lineWidthGranularity);
+}
+
 int main(int argc, char** argv) {
   if (!glfwInit()) {
     std::cerr << "GLFW initialization failed!" << std::endl;
@@ -508,6 +523,8 @@ int main(int argc, char** argv) {
 
   std::cout << "OpenGL version: " << glGetString(GL_VERSION) << std::endl;
 
+  printLineWidthSupport();
+
   // Initialization.
   SetupRenderState();
   LoadObjects(defaultModelPath);
@@ -531,7 +548,7 @@ int main(int argc, char** argv) {
     // Render ImGui.
     gui->render(dirLight, LoadObjects, objFileDirectory, isBlingPhong,
                 showDirLightArrow, onPointLight, onSpotLight, onDirLight, onAmbientLight,
-                onDiffuseLight, onSpecularLight);
+                onDiffuseLight, onSpecularLight, dirLightArrowScale);
     glfwSwapBuffers(window);
     glfwPollEvents();
   }

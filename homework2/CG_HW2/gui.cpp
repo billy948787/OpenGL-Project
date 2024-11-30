@@ -25,7 +25,7 @@ void GUI::render(DirectionalLight* dirLight,
                  std::vector<std::string> objFilePaths, bool& isBlingPhong,
                  bool& showDirLightArrow,  bool& onPointLight, bool& onSpotLight, bool& onDirLight,
                  bool& onAmbientLight, bool& onDiffuseLight,
-                 bool& onSpecularLight) {
+                 bool& onSpecularLight,float& dirLightArrowScale) {
   ImGui_ImplOpenGL3_NewFrame();
   ImGui_ImplGlfw_NewFrame();
   ImGui::NewFrame();
@@ -87,6 +87,8 @@ void GUI::render(DirectionalLight* dirLight,
   if (ImGui::ArrowButton("##downright", ImGuiDir_Right)) {
     dirLight->MoveDownRight(lightMoveSpeed);
   }
+
+  ImGui::SliderFloat("Scale", &dirLightArrowScale, 0.1f, 10.0f);
   ImGui::End();
 
   ImGui::Begin("Settings");

@@ -291,6 +291,10 @@ bool TriangleMesh::LoadFromFile(const std::string& filePath,
       maxPoint = glm::max(maxPoint, vertex.position);
     }
 
+	// Calculate the center and extent of the object.
+	objCenter = (minPoint + maxPoint) * 0.5f;
+	objExtent = maxPoint - minPoint;
+
     // Step 4: Move the object to the origin.
     glm::vec3 center = (minPoint + maxPoint) * 0.5f;
     for (auto& vertex : vertices) {
@@ -301,7 +305,6 @@ bool TriangleMesh::LoadFromFile(const std::string& filePath,
   // Calculate the number of vertices and triangles.
   numVertices = vertices.size();
 
-  ShowInfo();
   return true;
 }
 
