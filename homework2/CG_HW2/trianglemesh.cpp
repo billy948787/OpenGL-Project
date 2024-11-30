@@ -8,6 +8,8 @@ std::vector<std::string> getFilesInDirectory(const std::string& directoryPath) {
       std::string filePath = entry.path().string();
 
       if (filePath.find(".obj") != std::string::npos) {
+		// 因為在 Windows 環境下路徑分隔符號是 '\' ，而在 Unix 環境下是 '/' 而如果將路徑中的 '\' 換成 '/' ，可以避免一些問題
+        std::replace(filePath.begin(), filePath.end(), '\\' , '/');
         files.push_back(filePath);
       }
     }
@@ -138,6 +140,7 @@ TriangleMesh::~TriangleMesh() {
 }
 
 void TriangleMesh::processMaterialLib(const std::string& mtlFile) {
+  // 因為 mtl 檔案與 obj 檔案放在一起，所以根據 objFilePath 找到 mtl 檔案
   mtlFilePath =
       objFilePath.substr(0, objFilePath.find_last_of('/')) + "/" + mtlFile;
   std::ifstream file(mtlFilePath);
@@ -258,6 +261,7 @@ bool TriangleMesh::LoadFromFile(const std::string& filePath,
   normals.clear();
   uniqueVertices.clear();
 
+  // Normalize the vertices.
   if (normalized) {
     // Step 1: Calculate the bounding box.
     glm::vec3 minPoint(FLT_MAX, FLT_MAX, FLT_MAX);
@@ -307,12 +311,14 @@ void TriangleMesh::createBuffer() {
   for (auto& subMesh : subMeshes) {
     subMesh.createBuffer();
   }
+
+  glBindBuffer(GL_ARRAY_BUFFER, vboId);
+  glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(VertexPTN),
+      vertices.data(), GL_STATIC_DRAW);
 }
 
 void TriangleMesh::bindBuffer() {
   glBindBuffer(GL_ARRAY_BUFFER, vboId);
-  glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(VertexPTN),
-               vertices.data(), GL_STATIC_DRAW);
 }
 
 // Show model information.

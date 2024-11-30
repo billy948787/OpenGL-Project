@@ -45,6 +45,7 @@ FillColorShaderProg* fillColorShader = nullptr;
 PhongShadingDemoShaderProg* phongShadingShader = nullptr;
 bool isBlingPhong = true;
 // Light control.
+bool showDirLightArrow = true;
 bool onPointLight = true;
 bool onSpotLight = true;
 bool onDirLight = true;
@@ -83,8 +84,7 @@ struct SceneDirLight {
   SceneDirLight() {
     light = nullptr;
     worldMatrix = glm::mat4x4(1.0f);
-    visColor = glm::vec3(1.0f, 1.0f, 1.0f);
-    // 設定方向光的顯示位置(較遠處)
+    visColor = glm::vec3(0.0f, 0.0f, 0.0f);
     position = glm::vec3(0.0f, 0.0f, -1.0f);
   }
   DirectionalLight* light;
@@ -289,7 +289,8 @@ void RenderSceneCB() {
   // Visualize the directional light with fill color.
 
   DirectionalLight* dirLight = dirLightObj.light;
-  if (dirLight != nullptr) {
+  if (dirLight != nullptr && showDirLightArrow) {
+    // 將深度測試關掉 這樣箭頭不會被模型擋住
     glDisable(GL_DEPTH_TEST);
     // 使用固定位置
     glm::mat4x4 T = glm::translate(glm::mat4x4(1.0f), dirLightObj.position);
@@ -497,7 +498,7 @@ int main(int argc, char** argv) {
   glfwMakeContextCurrent(window);
 
   // Initialize GLEW.
-  // Must be done after glut is initialized!
+  // Must be done after glfw is initialized!
   GLenum res = glewInit();
   if (res != GLEW_OK) {
     std::cerr << "GLEW initialization error: " << glewGetErrorString(res)
@@ -529,7 +530,7 @@ int main(int argc, char** argv) {
     RenderSceneCB();
     // Render ImGui.
     gui->render(dirLight, LoadObjects, objFileDirectory, isBlingPhong,
-                onPointLight, onSpotLight, onDirLight, onAmbientLight,
+                showDirLightArrow, onPointLight, onSpotLight, onDirLight, onAmbientLight,
                 onDiffuseLight, onSpecularLight);
     glfwSwapBuffers(window);
     glfwPollEvents();

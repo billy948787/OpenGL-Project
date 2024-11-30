@@ -66,10 +66,6 @@ struct SubMesh {
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, iboId);
 
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-                 vertexIndices.size() * sizeof(unsigned int),
-                 vertexIndices.data(), GL_STATIC_DRAW);
-
     glDrawElements(GL_TRIANGLES, (GLsizei)vertexIndices.size(), GL_UNSIGNED_INT,
                    0);
 
@@ -78,7 +74,11 @@ struct SubMesh {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
   }
 
-  void createBuffer() { glGenBuffers(1, &iboId); }
+  void createBuffer() { 
+      glGenBuffers(1, &iboId); 
+	  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, iboId);
+      glBufferData(GL_ELEMENT_ARRAY_BUFFER, vertexIndices.size() * sizeof(unsigned int),vertexIndices.data(), GL_STATIC_DRAW);
+  }
 
   PhongMaterial *material;
   GLuint iboId;
@@ -165,7 +165,7 @@ class TriangleMesh {
   std::unordered_map<std::string, PhongMaterial *> materials;
   std::vector<SubMesh> subMeshes;
 
-  // material file path
+  // file path
   std::string mtlFilePath;
   std::string objFilePath;
 

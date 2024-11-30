@@ -13,7 +13,7 @@ class GUI {
   void render(DirectionalLight*,
               void (*LoadObjects)(const std::string& filePath),
               std::vector<std::string> objFilePaths, bool& isBlingPhong,
-              bool& onPointLight, bool& onSpotLight, bool& onDirLight,
+              bool& showDirLightArrow,bool& onPointLight, bool& onSpotLight, bool& onDirLight,
               bool& onAmbientLight, bool& onDiffuseLight, bool& onSpecularLight
 
   );

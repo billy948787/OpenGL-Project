@@ -1,6 +1,6 @@
 #include "gui.h"
 static int item_current_idx = 0;
-static float lightMoveSpeed = 1.0f;
+static float lightMoveSpeed = 0.2f;
 
 GUI::GUI(GLFWwindow* window) {
   IMGUI_CHECKVERSION();
@@ -23,7 +23,7 @@ GUI::~GUI() {
 void GUI::render(DirectionalLight* dirLight,
                  void (*LoadObjects)(const std::string& filePath),
                  std::vector<std::string> objFilePaths, bool& isBlingPhong,
-                 bool& onPointLight, bool& onSpotLight, bool& onDirLight,
+                 bool& showDirLightArrow,  bool& onPointLight, bool& onSpotLight, bool& onDirLight,
                  bool& onAmbientLight, bool& onDiffuseLight,
                  bool& onSpecularLight) {
   ImGui_ImplOpenGL3_NewFrame();
@@ -31,7 +31,7 @@ void GUI::render(DirectionalLight* dirLight,
   ImGui::NewFrame();
 
   // 創建一個選單
-  ImGui::Begin("Item Selector");
+  ImGui::Begin("Obj Selector");
   if (ImGui::BeginCombo(
           "Objs",
           splitString(objFilePaths[item_current_idx], '/').back().c_str())) {
@@ -91,6 +91,7 @@ void GUI::render(DirectionalLight* dirLight,
 
   ImGui::Begin("Settings");
   ImGui::Checkbox("Use Bling-Phong Shading", &isBlingPhong);
+  ImGui::Checkbox("Show DirLight Arrow", &showDirLightArrow);
   ImGui::Checkbox("Enable Point Light", &onPointLight);
   ImGui::Checkbox("Enable Spot Light", &onSpotLight);
   ImGui::Checkbox("Enable Directional Light", &onDirLight);

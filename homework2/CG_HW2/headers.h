@@ -11,8 +11,10 @@
 #include <glm/gtc/type_ptr.hpp>
 #else
 // OpenGL and FreeGlut headers.
-#include <freeglut.h>
+
 #include <glew.h>
+#include <GLFW/glfw3.h>
+#include <GLFW/glfw3native.h>
 
 // GLM.
 #include <glm.hpp>
@@ -26,6 +28,7 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <algorithm>
 #include <unordered_map>
 #include <vector>
 // imgui headers
